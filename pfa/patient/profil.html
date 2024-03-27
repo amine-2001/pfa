@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../js/contract.js"></script>
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">   
+    <title>Profile</title>
+    <link rel="icon" type="image/x-icon" href="../images/Patient.png">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="headerContainer"></div>
+
+    <div class="main">
+        <div class="banner">
+            <h1>profil</h1>
+        </div>
+        <div class="title2">
+            <a href="homePatient.html">Home</a><span>/ profil</span>
+
+        </div>
+        <section class="accounts1">
+            <h1 class="heading">Patient Profile</h1>
+            <div class="box-container" id="profileInfo">
+                <div class="box">
+
+
+            <div id="doctorInfo">
+                <p><img src="../images/NameIcone.png" alt="User Icon"  class="img"> <strong>NAME:</strong> <span id="patientName"></span></p> 
+                <p><img src="../images/EmailIcone.png" alt="User Icon"  class="img"> <strong>Email:</strong> <span id="patientEmail"></span></p>
+                <p><img src="../images/PasswordIcone.png" alt="User Icon"  class="img"> <strong>pass:</strong> <span id="patientPass"></span></p>
+                <p><img src="../images/PayementIcone.png" alt="User Icon"  class="img"> <strong>paymentType:</strong> <span id="patientPaymentType"></span></p>
+                <p><img src="../images/Date.png" alt="User Icon"  class="img"> <strong>nextConsultationDate:</strong> <span id="patientNextConsultationDate"></span></p>
+
+            </div>
+
+        </div>
+    </div>
+ 
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.5/web3.min.js"></script>
+    <script>
+        const header = document.querySelector('header');
+    
+    function fixedNavbar(){
+        header.classList.toggle('scrolled', window.pageYOffset > 0)
+    
+    }
+    
+    fixedNavbar();
+    window.addEventListener('scroll', fixedNavbar);
+    let menu = document.querySelector('#menu-btn');
+    
+    menu.addEventListener('click', function(){
+        let nav = document.querySelector(".navbar");
+    
+        nav.classList.toggle('active');
+     })
+    
+    
+    
+    let doctorBtn = document.querySelector('#user-btn');
+    
+    doctorBtn.addEventListener('click', function(){
+        
+    let doctorBox = document.querySelector('.profile-detail');
+    doctorBox.classList.toggle('active');
+    
+    })
+    </script>
+    <script >
+        document.addEventListener("DOMContentLoaded", async function() {
+    // Vérifie si MetaMask est installé
+    if (typeof window.ethereum !== "undefined") {
+        window.web3 = new Web3(window.ethereum);
+        try {
+            // Demander l'autorisation d'accéder au compte de l'utilisateur
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+
+            await connectContract();
+            // Récupérer les données du profil de l'utilisateur depuis le smart contract
+            const patientId = sessionStorage.getItem("patientId");
+
+            const PatientBasicInfo = await contract.methods.getPatientBasicInfo(patientId).call();
+            const PatientProfile = await contract.methods.getPatientProfile(patientId).call();
+
+  
+            document.getElementById("patientName").textContent = PatientBasicInfo[0];
+            document.getElementById("patientEmail").textContent = PatientBasicInfo[1];
+            document.getElementById("patientPass").textContent = PatientBasicInfo[2];
+            document.getElementById("patientNextConsultationDate").textContent = PatientProfile[5];
+            document.getElementById("patientPaymentType").textContent = PatientProfile[6];
+
+
+        } catch (error) {
+            console.error(error);
+        }
+    } else {
+        console.error("Web3 not found. Please install MetaMask.");
+    }
+});
+      // Charger le contenu de l'en-tête depuis le fichier header.html
+      window.onload = function() {
+            const headerContainer = document.getElementById("headerContainer");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "headerpatient.html", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    headerContainer.innerHTML = xhr.responseText;
+        const header = document.querySelector('header');
+
+        function fixedNavbar() {
+            header.classList.toggle('scrolled', window.pageYOffset > 0)
+        }
+
+        fixedNavbar();
+        window.addEventListener('scroll', fixedNavbar);
+        let menu = document.querySelector('#menu-btn');
+
+        menu.addEventListener('click', function () {
+            let nav = document.querySelector(".navbar");
+            nav.classList.toggle('active');
+        });
+
+     
+                }
+            };
+            xhr.send();
+        };
+    </script>
+
+</body>
+</html>

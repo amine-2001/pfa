@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <script src="../js/contract.js"></script>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
+        <title>Inscrire</title>
+        <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+    </head>
+    <body>
+        <div class="main">
+            <section>
+                <form id="dataForm" method="post" action="insertDoctor.php" onsubmit="submitData()">
+                    <img src="../images/doctor.png" width="100">
+                    <h1>Inscrire</h1>
+                    <div class="input-field">
+                        <img src="../images/NameIcone.png" alt="User Icon" class="img">
+                        <label for="nameInput">Name:</label>
+                        <input type="text" id="nameInput" name="nameInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/EmailIcone.png" alt="User Icon" class="img">
+                        <label for="emailInput">Email:</label>
+                        <input type="email" id="emailInput" name="emailInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/PasswordIcone.png" alt="User Icon" class="img">
+                        <label for="passInput">Password:</label>
+                        <input type="password" id="passInput" name="passInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/specialityIcone.png" alt="User Icon" class="img">
+                        <label for="specialtyInput">Specialty:</label>
+                        <input type="text" id="specialtyInput" name="specialtyInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/PhoneIcone.png" alt="User Icon" class="img">
+                        <label for="phoneInput">Phone Number:</label>
+                        <input type="text" id="phoneInput" name="phoneInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/AdresseIcone.png" alt="User Icon" class="img">
+                        <label for="addressInput">Professional Address:</label>
+                        <input type="text" id="addressInput" name="addressInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/RegionIcone.png" alt="User Icon" class="img">
+                        <label for="regionInput">Country/Region:</label>
+                        <input type="text" id="regionInput" name="regionInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/IdIcone.png" alt="User Icon" class="img">
+                        <label for="idInput">Professional ID:</label>
+                        <input type="text" id="idInput" name="idInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/ImageIcone.png" alt="User Icon" class="img">
+                        <label for="photoInput">Photo:</label>
+                        <input type="file" id="photoInput" name="photoInput" accept="image/*"><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/Date.png" alt="User Icon" class="img">
+                        <label for="startHour">Consultation start Hours:</label>
+                        <input type="time" id="startHour" name="starthoursInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/Date.png" alt="User Icon" class="img">
+                        <label for="endHour">Consultation end Hours:</label>
+                        <input type="time" id="endHour" name="endhoursInput" required><br><br>
+                    </div>
+                    <div class="input-field">
+                        <img src="../images/PayementIcone.png" alt="User Icon" class="img">
+                        <label for="feesInput">Fees:</label>
+                        <input type="text" id="feesInput" name="feesInput" required><br><br>
+                    </div>
+                    <button type="submit" class="btn">Submit Data</button>
+                    <p>Vous avez déjà un compte ? <a href="Connecte.html">Connecte-toi maintenant</a></p>
+                    <p id="contractArea"></p>
+                </form>
+            </section>
+        </div>
+
+        <script>
+            let account;
+            let contract;
+            const convertImageToBase64 = async (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            };
+            const connectMetamask = async () => {
+                if (window.ethereum !== "undefined") {
+                    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                    account = accounts[0];
+                }
+            }
+
+            const connectAndSubmit = async () => {
+                await connectMetamask();
+                await connectContract();
+            }
+
+            const submitData = async () => {
+                event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+
+                const name = document.getElementById("nameInput").value;
+                const email = document.getElementById("emailInput").value;
+                const pass = document.getElementById("passInput").value;
+                const specialty = document.getElementById("specialtyInput").value;
+                const phoneNumber = document.getElementById("phoneInput").value;
+                const address = document.getElementById("addressInput").value;
+                const region = document.getElementById("regionInput").value;
+                const id = document.getElementById("idInput").value;
+                const photo = document.getElementById("photoInput").value;
+                const startHour = document.getElementById("startHour").value;
+                const endHour = document.getElementById("endHour").value;
+                const consultationHours = startHour + " - " + endHour;
+                const fees = document.getElementById("feesInput").value;
+
+                await connectAndSubmit();
+
+                try {
+                    // Insérer les données dans le smart contract
+                    await contract.methods.addUser(name, email, pass, specialty, phoneNumber, address, region, id, photo, consultationHours, fees).send({ from: account });
+                    // Soumettre le formulaire pour insérer les données dans la base de données
+                    document.getElementById("dataForm").submit();
+
+                } catch (error) {
+                    console.error("Error adding user:", error);
+                    // Afficher un message d'erreur à l'utilisateur
+                }
+            }
+        </script>
+    </body>
+</html>

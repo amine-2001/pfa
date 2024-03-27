@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css?v=<?php echo time();?>">
+
+<title>contact</title>
+<link rel="icon" type="image/x-icon" href="../images/Patient.png">
+<script type="text/javascript">
+    (function () {
+        emailjs.init("R8JfZyj0Cf6gljvQA");
+    })();
+</script>
+
+
+</head>
+
+<body>
+    <div id="headerContainer"></div>
+
+<div class="main">
+<div class="banner">
+
+<h1>contact us</h1>
+
+</div>
+
+<div class="title2">
+
+<a href="homePatient.html">home </a> <span>/contact us</span>
+
+</div>
+
+<div class="form-container">
+            <form method="post" action="">
+                <div class="title">
+                    <img src="../images/Patient.png" class="logo">
+                    <h1>leave a message</h1>
+                </div>
+                <div class="input-field">
+                    <p>your name </p>
+                    <input type="text" name="name" id="name">
+                </div>
+                <div class="input-field">
+                    <p>your email </p>
+                    <input type="email" name="email" id="email">
+                </div>
+                <div class="input-field">
+                    <p>docto name</p>
+                    <input type="text" name="name" id ="doctorname">
+                </div>
+                <div class="input-field">
+                    <p>docto email</p>
+                    <input type="text" name="subject" id="doctoremail">
+                </div>
+                <div class="input-field">
+                    <p>your message </p>
+                    <textarea name="message" id="message"></textarea>
+                </div>
+                
+                <button class="btn" onclick="sendMail()">Submit</button>
+            </form>
+        </div>
+</div>
+        <script>
+            
+            function sendMail() {
+    var params = {
+        doctoremail: document.getElementById("doctoremail").value,
+        doctorname:  document.getElementById("doctorname").value,
+        email:  document.getElementById("email").value,
+        name: document.getElementById("name").value,
+        message: document.getElementById("message").value,
+    };
+
+    const serviceID = "service_hyj58jr";
+    const templateID = "template_39vbgps";
+
+    emailjs.send(serviceID, templateID, params)
+        .then(function(response) {
+            console.log("Email envoyé avec succès!", response);
+            alert("Votre message a été envoyé avec succès!");
+            // Réinitialiser le formulaire si nécessaire
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("doctorname").value = "";
+            document.getElementById("doctoremail").value = "";
+            document.getElementById("message").value = "";
+        }, function(error) {
+            console.error("Erreur lors de l'envoi de l'email:", error);
+            alert("Une erreur s'est produite lors de l'envoi du message. Veuillez réessayer plus tard.");
+        });
+}
+
+        </script>
+       
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script src="../js/script.js"></script>
+</div>
+
+
+<script>
+
+    // Charger le contenu de l'en-tête depuis le fichier header.html
+    window.onload = function() {
+        const headerContainer = document.getElementById("headerContainer");
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "headerpatient.html", true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                headerContainer.innerHTML = xhr.responseText;
+    const header = document.querySelector('header');
+
+    function fixedNavbar() {
+        header.classList.toggle('scrolled', window.pageYOffset > 0)
+    }
+
+    fixedNavbar();
+    window.addEventListener('scroll', fixedNavbar);
+    let menu = document.querySelector('#menu-btn');
+
+    menu.addEventListener('click', function () {
+        let nav = document.querySelector(".navbar");
+        nav.classList.toggle('active');
+    });
+
+ 
+            }
+        };
+        xhr.send();
+    };
+</script>
+</body>
+
+</html>

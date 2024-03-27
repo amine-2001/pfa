@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+	<script src="../js/contract.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css?v=<?php echo time();?>">
+    <title>Connecte Doctor </title>
+
+    <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+
+</head>
+<body>
+    <div class="main">
+        <section>
+            <p id="contractArea"></p>
+
+            <form id="dataForm">
+                <img src="../images/doctor.png" width="100">
+                <h1>Connecte</h1>
+                
+                <div class="input-field">
+                    <img src="../images/EmailIcone.png" alt="User Icon"  class="img"> 
+
+                    <label for="emailInput">Email:</label>
+                    <input type="text" id="emailInput" name="emailInput"><br><br>
+                </div>
+                <div class="input-field">
+                    <img src="../images/PasswordIcone.png" alt="User Icon"  class="img"> 
+
+                    <label for="passInput">Pass:</label>
+                    <input type="password" id="passInput" name="passInput"><br><br>
+
+                </div>
+                <button type="button" onclick="submitData()" class="btn">Submit Data</button>
+                <p>Vous n'avez pas de compte ? <a href="inscrire.html">S'inscrire maintenant</a></p>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        let account;
+        let contract;
+
+        const connectMetamask = async () => {
+            if(window.ethereum !== "undefined"){
+                const accounts = await ethereum.request({method: "eth_requestAccounts"});
+                account = accounts[0];
+            }
+        }
+
+
+        const connectAndSubmit = async () => {
+            await connectMetamask();
+            await connectContract();
+        }
+
+        const submitData = async () => {
+            const email = document.getElementById("emailInput").value;
+            const pass = document.getElementById("passInput").value;
+
+            await connectAndSubmit();
+
+            const userCount = await contract.methods.usersLength().call();
+            let userFound = false;
+
+            for (let i = 0; i < userCount; i++) {
+                const user = await contract.methods.users(i).call();
+                if (user.email === email && user.pass === pass) {
+                    userFound = true;
+                    sessionStorage.setItem("userId", i.toString()); // Enregistrement de l'ID de l'utilisateur en session
+                    break;
+                }
+            }
+
+            if (userFound) {
+                window.location.href = "home.html";
+            } else {
+                alert("Données incorrectes ou utilisateur non trouvé !");
+            }
+        }
+    </script>
+</body>
+</html>

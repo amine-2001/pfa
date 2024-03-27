@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../js/contract.js"></script>
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">   
+    <title>Profile</title>
+    <link rel="icon" type="image/x-icon" href="../images/Patient.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="headerContainer"></div>
+   
+    <div class="main">
+        <div class="banner">
+            <h1>Doctor Profil</h1>
+        </div>
+        <div class="title2">
+            <a href="homePatient.html">Home</a><span>/Doctor Profil</span>
+
+        </div>
+        <section class="profil">
+            <h1 class="heading">Doctor Profile</h1>
+          
+            <div class="box-container" id="profileInfo">
+                <div class="box">
+                    <img src="" alt="Profile Picture" id="profileImg">
+                    <div id="doctorInfo">
+                        <p><strong>Name:</strong> <span id="doctorName"></span></p>
+                        <p><strong>Email:</strong> <span id="doctorEmail"></span></p>
+                        <p><strong>specialty:</strong> <span id="doctorSpecialty"></span></p>
+                        <p><strong>phoneNumber:</strong> <span id="doctorphoneNumber"></span></p>
+                        <p><strong>professionalAddress:</strong> <span id="doctorProfessionalAddress"></span></p>
+                        <p><strong>countryRegion:</strong> <span id="doctorCountryRegion"></span></p>
+                        <p><strong>consultationHours:</strong> <span id="doctorConsultationHours"></span></p>
+                        <p><strong>fees:</strong> <span id="doctorFees"></span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.5/web3.min.js"></script>
+    <script>
+            // Charger le contenu de l'en-tête depuis le fichier header.html
+      window.onload = function() {
+            const headerContainer = document.getElementById("headerContainer");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "headerpatient.html", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    headerContainer.innerHTML = xhr.responseText;
+        const header = document.querySelector('header');
+
+        function fixedNavbar() {
+            header.classList.toggle('scrolled', window.pageYOffset > 0)
+        }
+
+        fixedNavbar();
+        window.addEventListener('scroll', fixedNavbar);
+        let menu = document.querySelector('#menu-btn');
+
+        menu.addEventListener('click', function () {
+            let nav = document.querySelector(".navbar");
+            nav.classList.toggle('active');
+        });
+
+     
+                }
+            };
+            xhr.send();
+        };
+    </script>
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", async function() {
+            if (typeof window.ethereum !== "undefined") {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    await connectContract();
+                    
+                    const patientId = sessionStorage.getItem("patientId");
+                    const patientProfile = await contract.methods.getPatientProfile(patientId).call();
+                    const patientProfessionalID = patientProfile[0]; 
+                  
+                    const doctorsCount = await contract.methods.usersLength().call();
+                    for (let i = 0; i < doctorsCount; i++) {
+                        const doctorProfile = await contract.methods.getUserProfile(i).call();
+                        const doctorBasicInfo = await contract.methods.getUserBasicInfo(i).call();
+            const doctorSchedule = await contract.methods.getUserSchedule(i).call();
+
+                        const doctorProfessionalID = doctorProfile[4]; 
+                      
+                        if (doctorProfessionalID === patientProfessionalID) {
+           
+            // Mettre à jour le contenu HTML avec les données récupérées
+            document.getElementById("profileImg").src ="../images/"+ extractFilenameFromPath(doctorProfile[5]);
+
+            
+            document.getElementById("doctorName").textContent = doctorBasicInfo[0];
+            document.getElementById("doctorEmail").textContent = doctorBasicInfo[1];
+            document.getElementById("doctorSpecialty").textContent = doctorProfile[0];
+            document.getElementById("doctorphoneNumber").textContent = doctorProfile[1];
+            document.getElementById("doctorProfessionalAddress").textContent = doctorProfile[2];
+            document.getElementById("doctorCountryRegion").textContent = doctorProfile[3];
+            document.getElementById("doctorConsultationHours").textContent = doctorSchedule[0];
+            document.getElementById("doctorFees").textContent = doctorSchedule[1];
+
+        }                        }
+                    
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.error("Web3 not found. Please install MetaMask.");
+            }
+        });
+
+
+        function extractFilenameFromPath(fullPath) {
+            var parts = fullPath.split(/[\\\/]/);
+            return parts[parts.length - 1];
+        }
+        
+    </script>
+</body>
+</html>

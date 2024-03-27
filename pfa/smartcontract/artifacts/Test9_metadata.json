@@ -1,0 +1,582 @@
+{
+	"compiler": {
+		"version": "0.8.24+commit.e11b9ed9"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_professionalID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_pass",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_eegData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_ecgData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_spo2Data",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_medicalHistory",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_nextConsultationDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_paymentType",
+						"type": "string"
+					}
+				],
+				"name": "addPatient",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_pass",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_specialty",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_phoneNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_professionalAddres",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_countryRegion",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_professionalID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_photo",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_consultationHours",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_fees",
+						"type": "string"
+					}
+				],
+				"name": "addUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getPatientBasicInfo",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getPatientProfile",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getUserBasicInfo",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getUserProfile",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getUserSchedule",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "patients",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "professionalID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pass",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "eegData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ecgData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "spo2Data",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "medicalHistory",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "nextConsultationDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "paymentType",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "patientsLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_professionalID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_pass",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_eegData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_ecgData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_spo2Data",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_medicalHistory",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_nextConsultationDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_paymentType",
+						"type": "string"
+					}
+				],
+				"name": "updatePatient",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "newFees",
+						"type": "string"
+					}
+				],
+				"name": "updateUserFees",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "users",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pass",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "specialty",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "phoneNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "professionalAddress",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "countryRegion",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "professionalID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "photo",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "consultationHours",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "fees",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "usersLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"smartcontract/Test9.sol": "Test9"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"smartcontract/Test9.sol": {
+			"keccak256": "0x0a1cec17bf72c69c0cf718eae8c15632a6be39af1cd4131665c9b3f2b18f9f4f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a457f8afee3e3c7fa487c2a1cbbb67143decb861949b184950f8cefc72e904c5",
+				"dweb:/ipfs/QmPRPJ5RTAgVmLhG5BrTmXS2yTPG9fSJXxiipFVvcdFkow"
+			]
+		}
+	},
+	"version": 1
+}

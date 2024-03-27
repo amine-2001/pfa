@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css?v=<?php echo time();?>">
+    <title>dashboard</title>
+    <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+
+    <script src="../js/contract.js"></script>
+</head>
+<body>
+    <div id="headerContainer"></div>
+
+
+    <div class="main">
+        <div class="banner">
+            <h1>dashboard</h1>
+        </div>
+        <div class="title2">
+            <a href="home.html">home</a><span>/ dashboard</span>
+        </div>
+        <section class="dashboard">
+            <h1 class="heading">dashboard</h1>
+            <div class="box-container">
+                <div class="box">
+                    <h3>welcome!</h3>
+                    <p id="welcomeMessage"></p>
+                    <a href="profil.html" class="btn">profile</a>
+                </div>
+                <div class="box">
+                    <h3>Doctors</h3>
+                    <p id="Docteurs"></p>
+                    <a href="Docteurs.html" class="btn">View the doctor's list</a>
+                </div>
+                <div class="box">
+                    <h3>Patients</h3>
+                    <p id="Patients"></p>
+                    <a href="Patients.html" class="btn">View the Patient's list</a>
+                </div>
+                <div class="box">
+                    <h3>Add Patient</h3>
+                    <p>New Patient</p>
+                    <a href="addPatient.html" class="btn">ADD</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            if (typeof window.ethereum !== "undefined") {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    await connectContract();
+                    const userId = sessionStorage.getItem("userId"); // Récupération de l'ID de l'utilisateur en session
+                    const userProfile = await contract.methods.getUserProfile(userId).call();
+                    const UserBasicInfo = await contract.methods.getUserBasicInfo(userId).call();
+                    const Docteurs = await contract.methods.usersLength().call();
+                    const professionalID = userProfile[4]; // L'indice 4 correspond à l'identifiant professionnel
+                    const patientsLengthWithID = await getPatientsLengthWithID(professionalID, contract);
+                    document.getElementById("welcomeMessage").innerText = "Hello, DR " + UserBasicInfo[0] ;
+                    document.getElementById("profileName").innerText =  UserBasicInfo[0]  ;
+                    document.getElementById("profileImg").src ="../images/"+ extractFilenameFromPath(userProfile[5]);
+                    document.getElementById("Docteurs").innerText = Docteurs +" Docteurs Existe";
+                    document.getElementById("Patients").innerText = patientsLengthWithID +" Patients Existe";
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.error("Web3 not found. Please install MetaMask.");
+            }
+        });
+
+        function extractFilenameFromPath(fullPath) {
+            var parts = fullPath.split(/[\\\/]/);
+            return parts[parts.length - 1];
+        }
+
+        const getPatientsLengthWithID = async (id, contract) => {
+            let count = 0;
+
+            const patientsLength = await contract.methods.patientsLength().call();
+            for (let i = 0; i < patientsLength; i++) {
+                const patientProfile = await contract.methods.getPatientProfile(i).call();
+                const patientProfessionalID = patientProfile[0]; // L'indice 2 correspond à l'identifiant professionnel
+
+                if (id === patientProfessionalID) {
+                    count++;
+                }
+            }
+
+            return count;
+        };
+  
+        
+        // Charger le contenu de l'en-tête depuis le fichier header.html
+        window.onload = function() {
+            const headerContainer = document.getElementById("headerContainer");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "header.html", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    headerContainer.innerHTML = xhr.responseText;
+        const header = document.querySelector('header');
+
+        function fixedNavbar() {
+            header.classList.toggle('scrolled', window.pageYOffset > 0)
+        }
+
+        fixedNavbar();
+        window.addEventListener('scroll', fixedNavbar);
+        let menu = document.querySelector('#menu-btn');
+
+        menu.addEventListener('click', function () {
+            let nav = document.querySelector(".navbar");
+            nav.classList.toggle('active');
+        });
+
+        let userBtn = document.querySelector('#user-btn');
+        userBtn.addEventListener('click', function () {
+            let userBox = document.querySelector('.profile-detail');
+            userBox.classList.toggle('active');
+        });
+                }
+            };
+            xhr.send();
+        };
+    </script>
+</body>
+</html>
