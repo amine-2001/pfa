@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script src="../js/contract.js"></script>
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
+    <title>Update Fees</title>
+    <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+
+    <!-- CSS styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <div id="headerContainer"></div>
+
+    <div class="main">
+        <div class="banner">
+            <h1>Profile</h1>
+        </div>
+        <div class="title2">
+            <a href="home.html">Home</a><span>/ Fees</span>
+        </div>
+        <section class="accounts1">
+            <h1 class="heading">Profile</h1>
+            <div class="box-container" id="profileInfo">
+                <form id="updateForm" method="post" action="updatefees.php" onsubmit="updateFees(event)">
+                    <div class="input-field">
+                        <img src="../images/PayementIcone.png" alt="User Icon"  class="img">
+                        <label for="fees">Fees:</label>
+                        <input type="text" id="fees" name="fees" value="">
+                        <input type="hidden" id="userId" name="userId" value="">
+                    </div>
+                    <button type="submit" class="btn">Update</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript code -->
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fees = urlParams.get('fees');
+            document.getElementById("fees").value = fees || '';
+            if (typeof window.ethereum !== "undefined") {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    await connectContract();
+
+                    const userId = sessionStorage.getItem("userId");
+                    document.getElementById("userId").value = userId;
+
+                    // Fetch user profile and related data from the smart contract
+                    const UserBasicInfo = await contract.methods.getUserBasicInfo(userId).call();
+                    const userProfile = await contract.methods.getUserProfile(userId).call();
+                    const doctorId = userProfile[4];
+
+                    // Display user information if needed
+                    document.getElementById("profileName").innerText = UserBasicInfo[0];
+                    document.getElementById("profileImg").src = "../images/" + extractFilenameFromPath(userProfile[5]);
+
+                    console.log("Fetching patients for doctor with ID:", doctorId);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.error("Web3 not found. Please install MetaMask.");
+            }
+        });
+
+        function extractFilenameFromPath(fullPath) {
+            var parts = fullPath.split(/[\\\/]/);
+            return parts[parts.length - 1];
+        }
+
+        async function connectMetaMask() {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                return accounts[0];
+            } catch (error) {
+                console.error("Error connecting to MetaMask:", error);
+                throw error;
+            }
+        }
+
+        async function updateFees(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            
+            const updatedFees = document.getElementById("fees").value;
+            const userId = document.getElementById("userId").value;
+
+            try {
+                const account = await connectMetaMask(); // Connect to MetaMask
+                const contract = await connectContract(); // Connect to smart contract
+                
+                // Update fees in the smart contract
+                await contract.methods.updateUserFees(userId, updatedFees).send({ from: account });
+
+                // Submit the form to update fees in the database
+                document.getElementById("updateForm").submit();
+            } catch (error) {
+                console.error("Error updating fees:", error);
+                // Handle errors
+            }
+        }
+    </script>
+
+    <!-- Additional scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../js/script.js"></script>
+
+    <!-- Load header content -->
+    <script>
+        window.onload = function() {
+            const headerContainer = document.getElementById("headerContainer");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "header.html", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    headerContainer.innerHTML = xhr.responseText;
+                    const header = document.querySelector('header');
+
+                    function fixedNavbar() {
+                        header.classList.toggle('scrolled', window.pageYOffset > 0)
+                    }
+
+                    fixedNavbar();
+                    window.addEventListener('scroll', fixedNavbar);
+                    let menu = document.querySelector('#menu-btn');
+
+                    menu.addEventListener('click', function () {
+                        let nav = document.querySelector(".navbar");
+                        nav.classList.toggle('active');
+                    });
+
+                    let userBtn = document.querySelector('#user-btn');
+                    userBtn.addEventListener('click', function () {
+                        let userBox = document.querySelector('.profile-detail');
+                        userBox.classList.toggle('active');
+                    });
+                }
+            };
+            xhr.send();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script src="../js/contract.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.3/dist/email.min.js"></script>
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css?v=<?php echo time();?>">
+    <title>Add Patient</title>
+    <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="headerContainer"></div>
+    <div class="main">
+        <div class="banner">
+            <h1>Add Patient</h1>
+        </div>
+        <div class="title2">
+            <a href="home.html">Home/</a><span> add Patient</span>
+        </div>
+        <section class="form-container">
+            <h1 class="heading">Add Patient</h1>
+            <form id="dataForm" method="post" action="insertPatient.php" >
+            <form id="addPatientForm" action="#" method="post" action="insert.php" enctype="multipart/form-data">
+                <div class="input-field">
+                    <img src="../images/IdIcone.png" alt="User Icon"  class="img"> 
+                    <label for="professionalIDInput">Professional ID:</label>
+                    <input type="text" id="professionalIDInput" name="professionalIDInput"><br><br>
+                </div>
+                <div class="input-field">
+                    <img src="../images/NameIcone.png" alt="User Icon"  class="img"> 
+                    <label for="nameInput">Name:</label>
+                    <input type="text" id="nameInput" name="nameInput" placeholder="write Patient Name"><br><br>
+                </div>
+                <div class="input-field">
+                    <img src="../images/EmailIcone.png" alt="Email Icon" class="img"> 
+                    <label for="emailInput">Email:</label>
+                    <input type="text" id="emailInput" name="emailInput" placeholder="write Patient Email"><br><br>
+                </div>
+                <div class="input-field">
+                    <img src="../images/PasswordIcone.png" alt="Password Icone"  class="img"> 
+                    <label for="passInput">Password:</label>
+                    <input type="password" id="passInput" name="passInput" placeholder="write Patient Password"><br><br>
+                </div>
+                <div class="input-field">
+                    <img src="../images/EegIcone.png" alt="EEG Icon"  class="img"> 
+                    <label for="eegInput">EEG Data:</label>
+                    <input type="text" id="eegInput" name="eegInput" placeholder="Enter EEG data">
+                </div>
+                <div class="input-field">
+                    <img src="../images/EsgIcone.png" alt="ECG Icon"  class="img"> 
+                    <label for="ecgInput">ECG Data:</label>
+                    <input type="text" id="ecgInput" name="ecgInput" placeholder="Enter ECG data">
+                </div>
+                <div class="input-field">
+                    <img src="../images/Spo2Icone.png" alt="SPO2 Icon"  class="img"> 
+                    <label for="spo2Input">SPO2 Data:</label>
+                    <input type="text" id="spo2Input" name="spo2Input" placeholder="Enter SPO2 data">
+                </div>
+                <div class="input-field">
+                    <img src="../images/RapportIcone.png" alt="Report Icon"  class="img"> 
+                    <label for="medicalInput">Clinical Report:</label>
+                    <textarea id="medicalInput" name="medicalInput" required maxlength="10000" required placeholder="Write medical assessment"></textarea>
+                </div>
+                <div class="input-field">
+                    <img src="../images/PayementIcone.png" alt="Payment Icon"  class="img"> 
+                    <label for="paymentTypeInput">Payment Type:</label><br>
+                    <select id="paymentTypeInput" name="paymentTypeInput">
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Card</option>
+                        <option value="Insurance">Insurance</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <img src="../images/Date.png" alt="Date Icon"  class="img"> 
+                    <label for="nextConsultationDateInput">Next Consultation Date:</label>
+                    <input type="datetime-local" id="nextConsultationDateInput" name="nextConsultationDateInput"><br><br>
+                </div>
+                <button type="submit" onclick="submitData()" class="btn">Add Patient</button>
+                <p id="contractArea"></p>
+            </form></section></div>
+
+    <script>
+        const fillProfessionalID = async () => {
+            const userId = sessionStorage.getItem("userId");
+            if (userId) {
+                const contract = await connectContract();
+                
+                const userProfile = await contract.methods.getUserProfile(userId).call();
+                const professionalID = userProfile[4];
+                document.getElementById("professionalIDInput").value = professionalID;
+            } else {
+                console.error("User ID not found in session.");
+            }
+        };
+    
+        window.onload = function() {
+            fillProfessionalID();
+            loadHeader();
+        };
+        
+        async function loadHeader() {
+            const headerContainer = document.getElementById("headerContainer");
+            try {
+                const response = await fetch("header.html");
+                if (response.ok) {
+                    const headerHTML = await response.text();
+                    headerContainer.innerHTML = headerHTML;
+                    let userBtn = document.querySelector('#user-btn');
+                    userBtn.addEventListener('click', function () {
+                        let userBox = document.querySelector('.profile-detail');
+                        userBox.classList.toggle('active');
+                    });
+                
+                    if (typeof window.ethereum !== "undefined") {
+                        window.web3 = new Web3(window.ethereum);
+                        try {
+                            await window.ethereum.request({ method: "eth_requestAccounts" });
+                            await connectContract();
+
+                            const userId = sessionStorage.getItem("userId");
+                            const UserBasicInfo = await contract.methods.getUserBasicInfo(userId).call();
+                            const userProfile = await contract.methods.getUserProfile(userId).call();
+                            const doctorId = userProfile[4];
+
+                            document.getElementById("profileName").innerText = UserBasicInfo[0];
+                            document.getElementById("profileImg").src = "../images/" + extractFilenameFromPath(userProfile[5]);
+
+                            console.log("Fetching patients for doctor with ID:", doctorId);
+                        } catch (error) {
+                           
+                            console.error(error);
+                        }
+                    } else {
+                        console.error("Web3 not found. Please install MetaMask.");
+                    }
+                } else {
+                    console.error("Failed to load header:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching header:", error);
+            }
+        }
+        
+        function extractFilenameFromPath(fullPath) {
+            var parts = fullPath.split(/[\\\/]/);
+            return parts[parts.length - 1];
+        }
+
+        const submitData = async () => {
+            const professionalID = document.getElementById("professionalIDInput").value;
+
+            const name = document.getElementById("nameInput").value;
+            const email = document.getElementById("emailInput").value;
+            const pass = document.getElementById("passInput").value;
+            const eegInput = document.getElementById("eegInput").value;
+            const ecgInput = document.getElementById("ecgInput").value;
+            const spo2Input = document.getElementById("spo2Input").value;
+
+            const medicalInput = document.getElementById("medicalInput").value;
+            const nextConsultationDate = document.getElementById("nextConsultationDateInput").value;
+            const paymentType = document.getElementById("paymentTypeInput").value;
+
+            const contract = await connectContract();
+            var params = {
+                name: name,
+                email: email,
+                message: pass,
+            };
+
+            const serviceID = "service_hyj58jr";
+            const templateID = "template_1wkx7fm";
+
+            emailjs.send(serviceID, templateID, params)
+            .then(res=>{
+                document.getElementById("nameInput").value = "";
+                document.getElementById("emailInput").value = "";
+                document.getElementById("passInput").value = "";
+                console.log(res);
+                alert("Your message sent successfully!!");
+            })
+            .catch(err=>console.log(err));
+
+            try {
+                const accounts = await ethereum.request({method: "eth_requestAccounts"});
+                const account = accounts[0];
+                await contract.methods.addPatient(
+                    professionalID,
+
+                    name,
+                    email,
+                    pass,
+                    eegInput,
+                    ecgInput,
+                    spo2Input,
+                    medicalInput,
+                    nextConsultationDate,
+                    paymentType
+                ).send({ from: account });
+                
+                document.getElementById("addPatientForm").reset();
+            } catch (error) {
+                console.error("Error adding patient:", error);
+            }
+        };
+    </script>
+
+    <script type="text/javascript">
+        (function () {
+            emailjs.init("R8JfZyj0Cf6gljvQA");
+        })();
+    </script>
+</body>
+</html>

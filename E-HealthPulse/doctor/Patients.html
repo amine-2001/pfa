@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="../js/contract.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.5.2/web3.min.js"></script>
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
+    <title>Patients</title>
+    <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+
+</head>
+<body>
+    <div id="headerContainer"></div>
+
+    <div class="main">
+        <div class="banner">
+            <h1>Patients</h1>
+        </div>
+        <div class="title2">
+            <a href="home.html">Home</a><span>/ Patients</span>
+        </div>
+        <section class="accounts1">
+            <h1 class="heading">Patients</h1>
+            <div class="box-container" id="usersContainer">
+            </div>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../js/script.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            if (typeof window.ethereum !== "undefined") {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    await connectContract();
+
+                    const userId = sessionStorage.getItem("userId");
+
+                    const UserBasicInfo = await contract.methods.getUserBasicInfo(userId).call();
+   
+                    const userProfile = await contract.methods.getUserProfile(userId).call();
+                    const doctorId = userProfile[4]; // Récupérez l'ID du médecin à partir du profil de l'utilisateur
+
+                    const patientsLength = await contract.methods.patientsLength().call();
+                    const usersContainer = document.getElementById("usersContainer");
+                    document.getElementById("profileName").innerText =  UserBasicInfo[0]  ;
+                    document.getElementById("profileImg").src ="../images/"+ extractFilenameFromPath(userProfile[5]);
+        
+                    console.log("Fetching patients for doctor with ID:", doctorId);
+                    for (let i = 0; i < patientsLength; i++) {
+                        const patientProfile = await contract.methods.getPatientProfile(i).call();
+                        
+                        const patientBasicInfo = await contract.methods.getPatientBasicInfo(i).call();
+
+                        // Vérifiez si le patient a le même professionalID que le médecin spécifié
+                        if (patientProfile[0] === doctorId) {
+                            console.log("Fetching patient", i + 1, "information...");
+                            console.log("Patient", i + 1, "Basic Info:", patientBasicInfo);
+                            console.log("Patients", i + 1, "Profile:", patientProfile);
+
+                            const userDiv = document.createElement("div");
+                            userDiv.classList.add("box");
+                            userDiv.innerHTML =`
+                                <p><strong><span>NAME:</span></strong> ${patientBasicInfo[0]}<img src="../images/NameIcone.png" alt="User Icon"  class="img"> </p> 
+                                <p><strong><span>EMAIL:</span></strong> ${patientBasicInfo[1]}<img src="../images/EmailIcone.png" alt="User Icon"  class="img"> </p>
+                                <p><strong><span>PASS WORD:</span></strong> ${patientBasicInfo[2]}<img src="../images/PasswordIcone.png" alt="User Icon"  class="img"> </p>
+                                <p><strong><span>EEG Data:</span></strong> ${patientProfile[1]} <img src="../images/EegIcone.png" alt="EEG Icon"  class="img"> </p>
+                                <p><strong><span>ECG Data:</span></strong> ${patientProfile[2]}<img src="../images/EsgIcone.png" alt="ECG Icon"  class="img"> </p>
+                                <p><strong><span>SPO2 Data:</span></strong> ${patientProfile[3]}<img src="../images/Spo2Icone.png" alt="SPO2 Icon"  class="img"></p>
+                                <p><strong><span>CLINICAL REPORT:</span></strong> ${patientProfile[4]}<img src="../images/RapportIcone.png" alt="Report Icon"  class="img"></p>
+                                <p><strong><span>Payment Type:</span></strong> ${patientProfile[6]}<img src="../images/PayementIcone.png" alt="Payment Icon"  class="img"></p>
+                                <p><strong><span>Next Consultation Date:</span></strong> ${patientProfile[5]}<img src="../images/Date.png" alt="Date Icon"  class="img"></p>
+
+                                <a href="updatePatient.php?id=${i}" class="btn">Update Patient</a>
+                            `;
+                            usersContainer.appendChild(userDiv);
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.error("Web3 not found. Please install MetaMask.");
+            }
+        });
+        function extractFilenameFromPath(fullPath) {
+            var parts = fullPath.split(/[\\\/]/);
+            return parts[parts.length - 1];
+        }
+    
+        // Charger le contenu de l'en-tête depuis le fichier header.html
+        window.onload = function() {
+            const headerContainer = document.getElementById("headerContainer");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "header.html", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    headerContainer.innerHTML = xhr.responseText;
+        const header = document.querySelector('header');
+
+        function fixedNavbar() {
+            header.classList.toggle('scrolled', window.pageYOffset > 0)
+        }
+
+        fixedNavbar();
+        window.addEventListener('scroll', fixedNavbar);
+        let menu = document.querySelector('#menu-btn');
+
+        menu.addEventListener('click', function () {
+            let nav = document.querySelector(".navbar");
+            nav.classList.toggle('active');
+        });
+
+        let userBtn = document.querySelector('#user-btn');
+        userBtn.addEventListener('click', function () {
+            let userBox = document.querySelector('.profile-detail');
+            userBox.classList.toggle('active');
+        });
+                }
+            };
+            xhr.send();
+        };
+    </script>
+</body>
+</html>

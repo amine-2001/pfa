@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <script src="contract.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
+    <title>Principal</title>
+    <link rel="icon" type="image/x-icon" href="images/logo.png">
+
+<style>
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    margin: 0;
+    background-image: linear-gradient(to right, #e6e7e8, #fdfdfdfd, #ffffff);
+
+}
+
+.thumb {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 20px;
+    background-image: linear-gradient(to right, #76e0f2, #94b9ff, #76e0f2);
+}
+h1 {
+    font-size: 40px;
+    font-weight: bold;
+    background: linear-gradient(to right, #76e0f2, #94b9ff, #76e0f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 20px;
+    
+}
+
+h1 img {
+    margin-right: 60px;
+    max-width: 70px;
+}
+
+h1 .after-title img {
+    margin-right: 60px;
+    max-width: 70px;
+}
+  
+</style>
+</head>
+<body>
+    <h1><img src="../images/logo.png"> E-HealthPulse <span class="after-title"><img src="../images/logo.png"></span></h1>
+
+    <ul class="thumb">
+        <li><img src="../images/Doctor.png" onclick="redirectTo('Connecte.html')"></li>
+        <li><img src="../images/Patient.png" onclick="redirectTo('../patient/connectPatient.html')"></li>
+    </ul>
+
+    <script>
+       
+       function redirectTo(page) {
+    // Stocker le type d'utilisateur dans la session avant de rediriger
+    if (page === 'Connecte.html') {
+        sessionStorage.setItem('userType', 'doctor');
+    } else if (page === 'connectPatient.html') {
+        sessionStorage.setItem('userType', 'patient');
+    }
+    // Rediriger vers la page spécifiée
+    window.location.href = page;
+}
+
+
+    </script>
+</body>
+</html>

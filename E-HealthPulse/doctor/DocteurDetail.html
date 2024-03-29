@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<script src="../js/contract.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.5.2/web3.min.js"></script>
+    <link href='https://www.unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
+    <title>Doctor Details</title>
+    <link rel="icon" type="image/x-icon" href="../images/Doctor.png">
+
+</head>
+<body>
+    <div id="headerContainer"></div>
+
+    <div class="main">
+        <div class="banner">
+            <h1>Doctor Detail</h1>
+        </div>
+        <div class="title2">
+            <a href="home.html">Home</a><span>/ Doctor Detail</span>
+        </div>
+
+        <section class="view_page">
+
+            <div class="img">
+                <img src="" alt="Profile Picture" id="profileImg1" class="img1">
+            </div>
+            <div class="detail">
+                <div class="name" id="profileName"></div>
+                <div class="price">
+                    <p><strong>Email:</strong> <span id="email"></span></p>
+                    <p><strong>Specialty:</strong> <span id="specialty"></span></p>
+                    <p><strong>Phone Number:</strong> <span id="phoneNumber"></span></p>
+                    <p><strong>Professional Address:</strong> <span id="professionalAddress"></span></p>
+                    <p><strong>Country/Region:</strong> <span id="countryRegion"></span></p>
+                    <p><strong>Professional ID:</strong> <span id="professionalID"></span></p>
+                    <p><strong>Consultation Hours:</strong> <span id="consultationHours"></span></p>
+                    <p><strong>Fees:</strong> <span id="fees"></span></p>
+                </div>
+                <a href="Docteurs.html" class="btn">Back to List</a>  
+            </div>
+      </section>
+
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../js/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            // Récupérer l'ID du docteur à partir des paramètres d'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const doctorId = urlParams.get('id');
+
+            if (typeof window.ethereum !== "undefined") {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    await connectContract();
+
+                    // Utiliser l'ID pour récupérer les informations spécifiques du docteur
+                    const userBasicInfo = await contract.methods.getUserBasicInfo(doctorId).call();
+                    const userProfile = await contract.methods.getUserProfile(doctorId).call();
+                    const userSchedule = await contract.methods.getUserSchedule(doctorId).call();
+
+                    // Afficher les informations sur la page de détails
+                    const profileImg1 = document.getElementById("profileImg1");
+                    profileImg1.src = `../images/${extractFilenameFromPath(userProfile[5])}`;
+                    const profileImg = document.getElementById("profileImg");
+                    profileImg.src = `../images/${extractFilenameFromPath(userProfile[5])}`;
+                    const profileName = document.getElementById("profileName");
+                    profileName.textContent = userBasicInfo[0];
+
+                    const email = document.getElementById("email");
+                    email.textContent = userBasicInfo[1];
+
+                    const specialty = document.getElementById("specialty");
+                    specialty.textContent = userProfile[0];
+
+                    const phoneNumber = document.getElementById("phoneNumber");
+                    phoneNumber.textContent = userProfile[1];
+
+                    const professionalAddress = document.getElementById("professionalAddress");
+                    professionalAddress.textContent = userProfile[2];
+
+                    const countryRegion = document.getElementById("countryRegion");
+                    countryRegion.textContent = userProfile[3];
+
+                    const professionalID = document.getElementById("professionalID");
+                    professionalID.textContent = userProfile[4];
+
+                    const consultationHours = document.getElementById("consultationHours");
+                    consultationHours.textContent = userSchedule[0];
+
+                    const fees = document.getElementById("fees");
+                    fees.textContent = userSchedule[1];
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.error("Web3 not found. Please install MetaMask.");
+            }
+        });
+
+        function extractFilenameFromPath(fullPath) {
+            // Divise le chemin complet en utilisant le séparateur de chemin (\ ou /)
+            var parts = fullPath.split(/[\\\/]/);
+            // Retourne le dernier élément du tableau qui correspond au nom du fichier
+            return parts[parts.length - 1];
+        }
+        
+        // Charger le contenu de l'en-tête depuis le fichier header.html
+        window.onload = function() {
+            const headerContainer = document.getElementById("headerContainer");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "header.html", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    headerContainer.innerHTML = xhr.responseText;
+        const header = document.querySelector('header');
+
+        function fixedNavbar() {
+            header.classList.toggle('scrolled', window.pageYOffset > 0)
+        }
+
+        fixedNavbar();
+        window.addEventListener('scroll', fixedNavbar);
+        let menu = document.querySelector('#menu-btn');
+
+        menu.addEventListener('click', function () {
+            let nav = document.querySelector(".navbar");
+            nav.classList.toggle('active');
+        });
+
+        let userBtn = document.querySelector('#user-btn');
+        userBtn.addEventListener('click', function () {
+            let userBox = document.querySelector('.profile-detail');
+            userBox.classList.toggle('active');
+        });
+                }
+            };
+            xhr.send();
+        };
+    </script></body>
+</html>
